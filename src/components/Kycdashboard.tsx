@@ -19,7 +19,7 @@ import OtpVerification from "./Otp-verification";
 // Define interface for API response
 interface DashboardData {
   userId: string;
-  name: string;
+  fullName: string;
   email: string;
   country: string;
   sourceOfFunds?: string; // Optional property
@@ -110,7 +110,7 @@ const KycDashboard = () => {
                 <h1 className="text-2xl font-bold text-red-500">{error}</h1>
               ) : data ? (
                 <h1 className="text-2xl font-bold">
-                  Hi {data.country}, KYC Verification
+                  Hi {data.fullName}, KYC Verification
                 </h1>
               ) : (
                 <h1 className="text-2xl font-bold">KYC Verification</h1>
