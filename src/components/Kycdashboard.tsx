@@ -16,29 +16,41 @@ import {
 import DocumentCard from "./Documentcard";
 import OtpVerification from "./Otp-verification";
 
+// Define interface for API response
+interface DashboardData {
+  userId: string;
+  name: string;
+  email: string;
+  country: string;
+  sourceOfFunds?: string; // Optional property
+}
+
 const KycDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { userId } = useParams(); // Get userId from URL
 
-
-  // Fetching Data
   useEffect(() => {
-    if (!userId) return; // Prevent API call if userId is undefined
+    if (!userId) return;
 
-    fetch(`https://8000-kode-ws-9d91fa209.hebbale.academy/api/dashboard?userId=${userId}`)
+    fetch(`https://hfgmz6ipee.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`)
       .then((res) => res.json())
       .then((response) => {
-        console.log("API Response:", response);
-        if (response.success) {
-          console.log("User Data:", response.data);
+        if (response.success && response.data) {
           setData(response.data);
-          console.log("country", response.country);
+        } else {
+          setError("Failed to fetch user data.");
         }
+        setLoading(false);
       })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [userId]);  // Add userId as a dependency
-  
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError("An error occurred while fetching data.");
+        setLoading(false);
+      });
+  }, [userId]);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
@@ -89,14 +101,17 @@ const KycDashboard = () => {
         <main className="flex-1 overflow-auto p-4 md:p-6">
           <div className="mx-auto max-w-6xl space-y-6">
             <section>
-            {data.length > 0 ? (
+              {loading ? (
+                <h1 className="text-2xl font-bold">Loading...</h1>
+              ) : error ? (
+                <h1 className="text-2xl font-bold text-red-500">{error}</h1>
+              ) : data ? (
                 <h1 className="text-2xl font-bold">
-                  {/* Hi {data[0]?country}, KYC Verification */}
+                  Hi {data.country}, KYC Verification
                 </h1>
               ) : (
                 <h1 className="text-2xl font-bold">KYC Verification</h1>
               )}
-
               <p className="text-muted-foreground">
                 Complete your verification to access all features
               </p>
