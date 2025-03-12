@@ -1,6 +1,5 @@
-import { useState, useCallback } from "react";
-import ThemeToggle from "./ThemeToggle";
-
+import { useState, useCallback, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   Bell,
   ChevronDown,
@@ -14,13 +13,32 @@ import {
   User,
   UserCheck,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
 import DocumentCard from "./Documentcard";
 import OtpVerification from "./Otp-verification";
 
 const KycDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [data, setData] = useState([]);
+  const { userId } = useParams(); // Get userId from URL
+
+
+  // Fetching Data
+  useEffect(() => {
+    if (!userId) return; // Prevent API call if userId is undefined
+
+    fetch(`https://8000-kode-ws-9d91fa209.hebbale.academy/api/dashboard?userId=${userId}`)
+      .then((res) => res.json())
+      .then((response) => {
+        console.log("API Response:", response);
+        if (response.success) {
+          console.log("User Data:", response.data);
+          setData(response.data);
+          console.log("country", response.country);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [userId]);  // Add userId as a dependency
+  
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
@@ -30,7 +48,9 @@ const KycDashboard = () => {
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-card shadow-lg transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-card shadow-lg transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="flex h-16 items-center border-b px-6">
           <Link to="/" className="flex items-center gap-2 font-semibold">
@@ -42,10 +62,8 @@ const KycDashboard = () => {
         <nav className="space-y-1 px-3 py-4">
           {[
             { to: "/dashboard", icon: Home, label: "Dashboard" },
-            { to: "/documents", icon: FileText, label: "Documents" },
             { to: "/profile", icon: User, label: "Profile" },
             { to: "/support", icon: MessageSquare, label: "Support" },
-            { to: "/settings", icon: Settings, label: "Settings" },
             { to: "/logout", icon: LogOut, label: "Logout" },
           ].map(({ to, icon: Icon, label }) => (
             <Link
@@ -64,19 +82,24 @@ const KycDashboard = () => {
       <div className="flex flex-1 flex-col">
         {/* Header */}
         <header className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white shadow-md px-4 md:px-6 dark:bg-gray-900">
-  <h1 className="text-2xl font-semibold">KYC Dashboard</h1>
-
-  
-</header>
-
-
+          <h1 className="text-2xl font-semibold">KYC Dashboard</h1>
+        </header>
 
         {/* Dashboard Content */}
         <main className="flex-1 overflow-auto p-4 md:p-6">
           <div className="mx-auto max-w-6xl space-y-6">
             <section>
-              <h1 className="text-2xl font-bold">KYC Verification</h1>
-              <p className="text-muted-foreground">Complete your verification to access all features</p>
+            {data.length > 0 ? (
+                <h1 className="text-2xl font-bold">
+                  {/* Hi {data[0]?country}, KYC Verification */}
+                </h1>
+              ) : (
+                <h1 className="text-2xl font-bold">KYC Verification</h1>
+              )}
+
+              <p className="text-muted-foreground">
+                Complete your verification to access all features
+              </p>
             </section>
 
             {/* Verification Progress */}
@@ -84,7 +107,9 @@ const KycDashboard = () => {
               <h2 className="text-xl font-semibold">Verification Progress</h2>
               <div className="flex items-center justify-between">
                 <span>60% Complete</span>
-                <span className="text-sm text-muted-foreground">3 of 5 steps completed</span>
+                <span className="text-sm text-muted-foreground">
+                  3 of 5 steps completed
+                </span>
               </div>
               <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                 <div className="h-full bg-green-500" style={{ width: "60%" }}></div>
@@ -96,12 +121,17 @@ const KycDashboard = () => {
                   { label: "Documents", status: "Completed", icon: FileText },
                   { label: "Verification", status: "In Progress", icon: CreditCard },
                 ].map(({ label, status, icon: Icon }, index) => (
-                  <div key={index} className="flex flex-col items-center rounded-lg border p-4">
+                  <div
+                    key={index}
+                    className="flex flex-col items-center rounded-lg border p-4"
+                  >
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
                       <Icon className="h-5 w-5 text-green-600" />
                     </div>
                     <h3 className="mt-2 font-medium">{label}</h3>
-                    <span className="mt-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">{status}</span>
+                    <span className="mt-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
+                      {status}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -111,9 +141,24 @@ const KycDashboard = () => {
             <section>
               <h2 className="text-xl font-semibold">Uploaded Documents</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <DocumentCard title="ID Card" status="verified" date="Uploaded on 15 May 2023" documentType="id-card" />
-                <DocumentCard title="Proof of Address" status="verified" date="Uploaded on 16 May 2023" documentType="address-proof" />
-                <DocumentCard title="Selfie Verification" status="pending" date="Uploaded on 17 May 2023" documentType="selfie" />
+                <DocumentCard
+                  title="ID Card"
+                  status="verified"
+                  date="Uploaded on 15 May 2023"
+                  documentType="id-card"
+                />
+                <DocumentCard
+                  title="Proof of Address"
+                  status="verified"
+                  date="Uploaded on 16 May 2023"
+                  documentType="address-proof"
+                />
+                <DocumentCard
+                  title="Selfie Verification"
+                  status="pending"
+                  date="Uploaded on 17 May 2023"
+                  documentType="selfie"
+                />
               </div>
             </section>
 
