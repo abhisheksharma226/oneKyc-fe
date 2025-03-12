@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider>
       <Router>
         <Routes>
-        <Route path="/dashboard/:userId" element={<KycDashboard />} />
+        <Route path="/" element={<KycDashboard />} />
         </Routes>
         <Routes>
           <Route path="/download" element={<Download />} />

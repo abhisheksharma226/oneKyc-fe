@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useSearchParams  } from "react-router-dom";
 import {
   Bell,
   ChevronDown,
@@ -30,12 +30,15 @@ const KycDashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { userId } = useParams(); // Get userId from URL
+  const [searchParams] = useSearchParams(); 
+  const userId = searchParams.get("userId"); // ✅ Extract userId
 
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`https://hfgmz6ipee.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`)
+    const url = `https://hfgmz6ipee.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;
+
+    fetch(url)
       .then((res) => res.json())
       .then((response) => {
         if (response.success && response.data) {
