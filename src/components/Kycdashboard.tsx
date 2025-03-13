@@ -1,6 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Profile from "./Profile"; // Import Profile component
+import DocumentCard from "./Documentcard";
+import OtpVerification from "./Otp-verification";
+import Support from "./Support";
+
+import Modal from "./Modal";
 
 import {
   Bell,
@@ -15,9 +20,6 @@ import {
   User,
   UserCheck,
 } from "lucide-react";
-import DocumentCard from "./Documentcard";
-import OtpVerification from "./Otp-verification";
-import Support from "./Support";
 
 // Define interface for API response
 interface DashboardData {
@@ -26,6 +28,14 @@ interface DashboardData {
   email: string;
   country: string;
   sourceOfFunds?: string; // Optional property
+  idDocument?: string;
+  passport?: string;
+  bankStatement?: string;
+  addressProof?: string;
+  selfie?: string;
+  nationalId?: string;
+  driverLicense?: string;
+  utilityBill?: string;
 }
 
 const KycDashboard = () => {
@@ -33,9 +43,11 @@ const KycDashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchParams] = useSearchParams(); 
+  const [searchParams] = useSearchParams();
   const userId = searchParams.get("userId"); // ✅ Extract userId
   const [activeTab, setActiveTab] = useState("dashboard"); // Default to Dashboard
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) return;
@@ -63,6 +75,20 @@ const KycDashboard = () => {
     setIsSidebarOpen((prev) => !prev);
   }, []);
 
+
+  const openPopup = (docUrl: string | undefined) => {
+    if (docUrl) {
+      setSelectedDocument(docUrl);
+      setIsPopupOpen(true);
+    }
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedDocument(null);
+  };
+
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
@@ -79,30 +105,29 @@ const KycDashboard = () => {
         </div>
 
         <nav className="space-y-1 px-3 py-4">
-          {[
-            { id: "dashboard", icon: Home, label: "Dashboard" },
+          {[{ id: "dashboard", icon: Home, label: "Dashboard" },
             { id: "profile", icon: User, label: "Profile" },
             { id: "support", icon: MessageSquare, label: "Support" },
-            { id: "logout", icon: LogOut, label: "Logout" },
-          ].map(({ id, icon: Icon, label }) => (
-            <button
-              key={id}
-              onClick={() => setActiveTab(id)}
-              className={`flex w-full items-center space-x-3 rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground ${
-                activeTab === id ? "bg-accent text-accent-foreground" : ""
-              }`}
-            >
-              <Icon className="h-5 w-5" />
-              <span>{label}</span>
-            </button>
-          ))}
+            { id: "logout", icon: LogOut, label: "Logout" }]
+            .map(({ id, icon: Icon, label }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex w-full items-center space-x-3 rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground ${
+                  activeTab === id ? "bg-accent text-accent-foreground" : ""
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+                <span>{label}</span>
+              </button>
+            ))}
         </nav>
       </aside>
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white shadow-md px-4 md:px-6 dark:bg-gray-900">
+        <header className="z-50 flex h-16 items-center justify-between bg-white shadow-md px-4 md:px-6 dark:bg-gray-900">
           <h1 className="text-2xl font-semibold">KYC Dashboard</h1>
         </header>
 
@@ -141,51 +166,56 @@ const KycDashboard = () => {
                 </div>
 
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  {[
-                    { label: "Personal Info", status: "Completed", icon: User },
+                  {[{ label: "Personal Info", status: "Completed", icon: User },
                     { label: "Documents", status: "Completed", icon: FileText },
-                    { label: "Verification", status: "In Progress", icon: CreditCard },
-                  ].map(({ label, status, icon: Icon }, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col items-center rounded-lg border p-4"
-                    >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                        <Icon className="h-5 w-5 text-green-600" />
+                    { label: "Verification", status: "In Progress", icon: CreditCard }]
+                    .map(({ label, status, icon: Icon }, index) => (
+                      <div key={index} className="flex flex-col items-center rounded-lg border p-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+                          <Icon className="h-5 w-5 text-green-600" />
+                        </div>
+                        <h3 className="mt-2 font-medium">{label}</h3>
+                        <span className="mt-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
+                          {status}
+                        </span>
                       </div>
-                      <h3 className="mt-2 font-medium">{label}</h3>
-                      <span className="mt-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
-                        {status}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </section>
 
               {/* Uploaded Documents */}
               <section>
-                <h2 className="text-xl font-semibold">Uploaded Documents</h2>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <DocumentCard
-                    title="ID Card"
-                    status="verified"
-                    date="Uploaded on 15 May 2023"
-                    documentType="id-card"
-                  />
-                  <DocumentCard
-                    title="Proof of Address"
-                    status="verified"
-                    date="Uploaded on 16 May 2023"
-                    documentType="address-proof"
-                  />
-                  <DocumentCard
-                    title="Selfie Verification"
-                    status="pending"
-                    date="Uploaded on 17 May 2023"
-                    documentType="selfie"
-                  />
-                </div>
-              </section>
+                  <h2 className="text-xl font-semibold">Uploaded Documents</h2>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {data ? (
+                      <>
+                        <DocumentCard
+                          title="ID Card"
+                          status={data.idDocument ? "verified" : "pending"}
+                          date={data.idDocument ? "Uploaded on XYZ Date" : "No document uploaded"}
+                          documentUrl={data.idDocument || ""} // ✅ Pass document URL
+                        />
+
+                        <DocumentCard
+                          title="Passport"
+                          status={data.passport ? "verified" : "pending"}
+                          date={data.passport ? "Uploaded on XYZ Date" : "No document uploaded"}
+                          documentUrl={data.passport || ""} // ✅ Pass document URL
+                        />
+
+                        <DocumentCard
+                          title="Bank Statement"
+                          status={data.bankStatement ? "verified" : "pending"}
+                          date={data.bankStatement ? "Uploaded on XYZ Date" : "No document uploaded"}
+                          documentUrl={data.bankStatement || ""} // ✅ Pass document URL
+                        />
+
+                      </>
+                    ) : (
+                      <p className="text-red-500">No documents uploaded yet - Pending Verification</p>
+                    )}
+                  </div>
+                </section>
 
               {/* OTP Verification */}
               <section>
