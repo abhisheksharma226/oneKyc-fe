@@ -39,11 +39,13 @@ const Navbar = () => {
 
         {/* Login Button */}
         <div>
-  <Link to="/login">
-    <button className="px-6 py-2 text-white bg-[#484950] rounded-full shadow-md hover:bg-[#8b7fe6] transition-all duration-300 font-bold">
+ 
+    <button
+    onClick={() => window.location.href = "https://5173-kode-ws-9d91fa209.hebbale.academy/login"}
+    className="px-6 py-2 text-white bg-[#484950] rounded-full shadow-md hover:bg-[#8b7fe6] transition-all duration-300 font-bold">
       Login
     </button>
-  </Link>
+ 
 </div>
 
       </div>
