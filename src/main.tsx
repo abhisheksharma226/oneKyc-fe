@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/Theme-provider";
 import KycDashboard from "./components/Kycdashboard";
 import Download from "./components/ThirdParty/Download";
+import Home from "./components/Home/pages/Home.jsx"
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -11,10 +12,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider>
       <Router>
         <Routes>
-        <Route path="/" element={<KycDashboard />} />
-        </Routes>
-        <Routes>
-          <Route path="/download" element={<Download />} />
+              <Route path="/" element={<KycDashboard />} />
+              <Route path="/download" element={<Download />} />
+              <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
     </ThemeProvider>
