@@ -52,7 +52,7 @@ const KycDashboard = () => {
   useEffect(() => {
     if (!userId) return;
 
-    const url = `https://qiqawrqep9.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;
+    const url = `https://bzfr4unvrk.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;
 
     fetch(url)
       .then((res) => res.json())
