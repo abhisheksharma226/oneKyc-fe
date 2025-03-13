@@ -4,6 +4,8 @@ import { useState, useCallback, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Mail, MapPin, Check, X, Activity, HelpCircle, AlertCircle } from "lucide-react";
 
+import { BASE_URL } from "./Url";
+
 // Define interface for API response
 interface DashboardData {
   dataId: string;
@@ -14,6 +16,7 @@ interface DashboardData {
   country: string;
   consent: boolean;
   sourceOfFunds?: string; // Optional property
+  selfie?: string;
 }
 
 const Profile = () => {
@@ -32,7 +35,7 @@ const Profile = () => {
       return;
     }
 
-    const url = `https://qiqawrqep9.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;
+    const url = BASE_URL(userId);
 
     fetch(url)
       .then((res) => res.json())
@@ -62,7 +65,7 @@ const Profile = () => {
         <div className="w-full md:w-1/4 p-4 border rounded-lg shadow-md bg-white">
           <div className="flex flex-col items-center space-y-4">
             <img 
-              src="https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-male-user-profile-vector-illustration-isolated-background-man-profile-sign-business-concept_157943-38764.jpg" 
+              src={data?.selfie || "https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-male-user-profile-vector-illustration-isolated-background-man-profile-sign-business-concept_157943-38764.jpg" }
               alt="User Avatar" 
               className="h-24 w-24 rounded-full border" 
             />

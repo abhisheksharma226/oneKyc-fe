@@ -4,6 +4,7 @@ import Profile from "./Profile"; // Import Profile component
 import DocumentCard from "./Documentcard";
 import OtpVerification from "./Otp-verification";
 import Support from "./Support";
+import { BASE_URL } from "./Url";
 
 import Modal from "./Modal";
 
@@ -23,19 +24,32 @@ import {
 
 // Define interface for API response
 interface DashboardData {
-  userId: string;
-  fullName: string;
-  email: string;
-  country: string;
-  sourceOfFunds?: string; // Optional property
-  idDocument?: string;
-  passport?: string;
-  bankStatement?: string;
-  addressProof?: string;
-  selfie?: string;
-  nationalId?: string;
-  driverLicense?: string;
-  utilityBill?: string;
+    userId: string;
+    fullName: string;
+    dateOfBirth: string;
+    gender: string;
+    nationality: string;
+    phoneNumber: string;
+    emailAddress: string;
+    occupation: string;
+    residentialAddress: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+    permanentAddress: string;
+    taxIdNumber: string;
+    pepStatus: string;
+    consent: boolean;
+    sourceOfFunds?: string; // Optional property
+    idDocument?: string;
+    passport?: string;
+    bankStatement?: string;
+    addressProof?: string;
+    selfie?: string;
+    nationalId?: string;
+    driverLicense?: string;
+    utilityBill?: string;
 }
 
 const KycDashboard = () => {
@@ -52,7 +66,7 @@ const KycDashboard = () => {
   useEffect(() => {
     if (!userId) return;
 
-    const url = `https://bzfr4unvrk.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;
+    const url = BASE_URL(userId);
 
     fetch(url)
       .then((res) => res.json())
@@ -71,22 +85,35 @@ const KycDashboard = () => {
       });
   }, [userId]);
 
-  const toggleSidebar = useCallback(() => {
-    setIsSidebarOpen((prev) => !prev);
-  }, []);
+  const isPersonalInfoComplete = 
+  data?.userId &&
+  data?.fullName &&
+  data?.dateOfBirth &&
+  data?.gender &&
+  data?.nationality &&
+  data?.phoneNumber &&
+  data?.emailAddress &&
+  data?.occupation &&
+  data?.residentialAddress &&
+  data?.city &&
+  data?.state &&
+  data?.postalCode &&
+  data?.country &&
+  data?.permanentAddress &&
+  data?.taxIdNumber &&
+  data?.pepStatus &&
+  data?.consent;
 
+  const areDocumentsUploaded = !!(
+    data?.idDocument &&
+    data?.passport &&
+    data?.bankStatement &&
+    data?.addressProof &&
+    data?.selfie
+  );
 
-  const openPopup = (docUrl: string | undefined) => {
-    if (docUrl) {
-      setSelectedDocument(docUrl);
-      setIsPopupOpen(true);
-    }
-  };
-
-  const closePopup = () => {
-    setIsPopupOpen(false);
-    setSelectedDocument(null);
-  };
+  const isKYCComplete = isPersonalInfoComplete && areDocumentsUploaded;
+  const progressPercentage = isKYCComplete ? "100%" : "60%";
 
 
   return (
@@ -156,30 +183,40 @@ const KycDashboard = () => {
               <section>
                 <h2 className="text-xl font-semibold">Verification Progress</h2>
                 <div className="flex items-center justify-between">
-                  <span>60% Complete</span>
-                  <span className="text-sm text-muted-foreground">
-                    3 of 5 steps completed
-                  </span>
+                  <span>{isKYCComplete ? "100% Complete" : "60% Complete"}</span>
                 </div>
                 <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500" style={{ width: "60%" }}></div>
+                  <div className="h-full bg-green-500" style={{ width: progressPercentage }}></div>
                 </div>
 
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  {[{ label: "Personal Info", status: "Completed", icon: User },
-                    { label: "Documents", status: "Completed", icon: FileText },
-                    { label: "Verification", status: "In Progress", icon: CreditCard }]
-                    .map(({ label, status, icon: Icon }, index) => (
-                      <div key={index} className="flex flex-col items-center rounded-lg border p-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                          <Icon className="h-5 w-5 text-green-600" />
-                        </div>
-                        <h3 className="mt-2 font-medium">{label}</h3>
-                        <span className="mt-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
-                          {status}
-                        </span>
+                  {[
+                    {
+                      label: "Personal Info",
+                      status: isPersonalInfoComplete ? "Completed" : "Incomplete",
+                      icon: User,
+                    },
+                    {
+                      label: "Documents",
+                      status: areDocumentsUploaded ? "Completed" : "Incomplete",
+                      icon: FileText,
+                    },
+                    {
+                      label: "Verification",
+                      status: isKYCComplete ? "Completed" : "In Progress",
+                      icon: CreditCard,
+                    },
+                  ].map(({ label, status, icon: Icon }, index) => (
+                    <div key={index} className="flex flex-col items-center rounded-lg border p-4">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-full ${status === "Completed" ? "bg-green-100" : "bg-gray-200"}`}>
+                        <Icon className={`h-5 w-5 ${status === "Completed" ? "text-green-600" : "text-gray-500"}`} />
                       </div>
-                    ))}
+                      <h3 className="mt-2 font-medium">{label}</h3>
+                      <span className={`mt-1 rounded-full px-2 py-0.5 text-xs ${status === "Completed" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                        {status}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </section>
 

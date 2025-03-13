@@ -75,33 +75,80 @@ export default function Support() {
 
           {/* Tab Content */}
           <div>
-            {activeTab === "faq" && (
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-3">
-                  Frequently Asked Questions
-                </h2>
-                <div className="space-y-3">
-                  <div className="border rounded-lg p-4 bg-gray-50">
-                    <h3 className="font-semibold text-gray-800">
-                      How do I reset my password?
-                    </h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      To reset your password, click on the "Forgot Password"
-                      link on the login page.
-                    </p>
-                  </div>
-                  <div className="border rounded-lg p-4 bg-gray-50">
-                    <h3 className="font-semibold text-gray-800">
-                      What is the counter in my profile?
-                    </h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      The counter in your profile represents your activity
-                      points.
-                    </p>
+          {activeTab === "faq" && (
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-3">
+                    Frequently Asked Questions
+                  </h2>
+                  <div className="space-y-3">
+                    
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        What is OneKYC Hub?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        OneKYC Hub is a centralized platform designed to streamline the KYC process, reducing redundancy in identity verification for financial transactions.
+                      </p>
+                    </div>
+
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        How does OneKYC Hub enhance security?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        We utilize AWS Cognito for authentication, S3 for secure document storage, and dynamic consent management to ensure privacy and fraud prevention.
+                      </p>
+                    </div>
+
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        How can I upload my KYC documents?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Log in to your account, navigate to the "Upload Documents" section, and securely upload your identity verification files.
+                      </p>
+                    </div>
+
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        What happens after I submit my KYC documents?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Your documents undergo verification. You can track the status in your dashboard under the "KYC Status" section.
+                      </p>
+                    </div>
+
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        Can I reuse my verified KYC documents?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Yes! Once verified, your KYC data can be reused across multiple platforms that integrate with OneKYC Hub, reducing the need for repetitive verification.
+                      </p>
+                    </div>
+
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        How do I reset my password?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Click on the "Forgot Password" link on the login page and follow the instructions to reset your password.
+                      </p>
+                    </div>
+
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <h3 className="font-semibold text-gray-800">
+                        How do I contact support?
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        You can reach out to our support team via the "Help & Support" section in your dashboard or email us at support@onekychub.com.
+                      </p>
+                    </div>
+
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+
 
             {activeTab === "contact" && (
               <div>
