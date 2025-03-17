@@ -112,8 +112,18 @@ const KycDashboard = () => {
     data?.selfie
   );
 
+  const isPhoneVerified = !!data?.phoneNumber
+
   const isKYCComplete = isPersonalInfoComplete && areDocumentsUploaded;
-  const progressPercentage = isKYCComplete ? "100%" : "60%";
+  const isFullyVerified = isKYCComplete && isPhoneVerified;
+  
+  const progressPercentage = isFullyVerified 
+    ? "100%" 
+    : isKYCComplete 
+    ? "70%" 
+    : isPersonalInfoComplete || areDocumentsUploaded 
+    ? "35%" 
+    : "0%";
 
 
   return (
@@ -179,46 +189,54 @@ const KycDashboard = () => {
                 </p>
               </section>
 
-              {/* Verification Progress */}
-              <section>
-                <h2 className="text-xl font-semibold">Verification Progress</h2>
-                <div className="flex items-center justify-between">
-                  <span>{isKYCComplete ? "100% Complete" : "60% Complete"}</span>
-                </div>
-                <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500" style={{ width: progressPercentage }}></div>
-                </div>
+            {/* Verification Progress */}
+<section>
+  <h2 className="text-xl font-semibold">Verification Progress</h2>
+  <div className="flex items-center justify-between">
+    <span>
+      {progressPercentage === "100%" 
+        ? "100% Complete - Verification Completed ✅" 
+        : progressPercentage === "70%" 
+        ? "70% Complete" 
+        : progressPercentage === "35%" 
+        ? "35% Complete" 
+        : "0% Complete"}
+    </span>
+  </div>
+  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+    <div className="h-full bg-green-500" style={{ width: progressPercentage }}></div>
+  </div>
 
-                <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  {[
-                    {
-                      label: "Personal Info",
-                      status: isPersonalInfoComplete ? "Completed" : "Incomplete",
-                      icon: User,
-                    },
-                    {
-                      label: "Documents",
-                      status: areDocumentsUploaded ? "Completed" : "Incomplete",
-                      icon: FileText,
-                    },
-                    {
-                      label: "Verification",
-                      status: isKYCComplete ? "Completed" : "In Progress",
-                      icon: CreditCard,
-                    },
-                  ].map(({ label, status, icon: Icon }, index) => (
-                    <div key={index} className="flex flex-col items-center rounded-lg border p-4">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-full ${status === "Completed" ? "bg-green-100" : "bg-gray-200"}`}>
-                        <Icon className={`h-5 w-5 ${status === "Completed" ? "text-green-600" : "text-gray-500"}`} />
-                      </div>
-                      <h3 className="mt-2 font-medium">{label}</h3>
-                      <span className={`mt-1 rounded-full px-2 py-0.5 text-xs ${status === "Completed" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                        {status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </section>
+  <div className="mt-6 grid gap-4 md:grid-cols-3">
+    {[
+      {
+        label: "Personal Info",
+        status: isPersonalInfoComplete ? "Completed" : "Incomplete",
+        icon: User,
+      },
+      {
+        label: "Documents",
+        status: areDocumentsUploaded ? "Completed" : "Incomplete",
+        icon: FileText,
+      },
+      {
+        label: "Verification",
+        status: isFullyVerified ? "Completed" : "In Progress",
+        icon: CreditCard,
+      },
+    ].map(({ label, status, icon: Icon }, index) => (
+      <div key={index} className="flex flex-col items-center rounded-lg border p-4">
+        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${status === "Completed" ? "bg-green-100" : "bg-gray-200"}`}>
+          <Icon className={`h-5 w-5 ${status === "Completed" ? "text-green-600" : "text-gray-500"}`} />
+        </div>
+        <h3 className="mt-2 font-medium">{label}</h3>
+        <span className={`mt-1 rounded-full px-2 py-0.5 text-xs ${status === "Completed" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+          {status}
+        </span>
+      </div>
+    ))}
+  </div>
+</section>
 
               {/* Uploaded Documents */}
               <section>
