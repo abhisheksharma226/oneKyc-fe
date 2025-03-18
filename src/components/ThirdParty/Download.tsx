@@ -148,10 +148,14 @@ export default function SearchPage() {
                 className="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               >
                 <option value="">Select document type</option>
-                <option value="invoice">Invoice</option>
-                <option value="receipt">Receipt</option>
-                <option value="contract">Contract</option>
-                <option value="report">Report</option>
+                <option value="idDocument">Id Card</option>
+                <option value="passport">Passport</option>
+                <option value="bankStatement">Bank Statement</option>
+                <option value="addressProof">Adress Proof</option>
+                <option value="selfie">Photo</option>
+                <option value="nationalId">National Id</option>
+                <option value="driverLicense">Driving License</option>
+                <option value="utilityBill">Utility Bill</option>
               </select>
             </div>
 
