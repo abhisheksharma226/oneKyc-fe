@@ -11,7 +11,7 @@ interface DashboardData {
   dataId: string;
   gender: string;
   fullName: string;
-  email: string;
+  emailAddress: string;
   state: string;
   country: string;
   consent: boolean;
