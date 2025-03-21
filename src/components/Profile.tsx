@@ -90,8 +90,8 @@ const Profile = () => {
             <>
               <div className="flex border-b mb-4">
                 {[{ label: "Details", value: "details" },
-                  { label: "Activity", value: "activity" },
-                  { label: "Settings", value: "settings" },
+                  // { label: "Activity", value: "activity" },
+                  // { label: "Settings", value: "settings" },
                 ].map((tab) => (
                   <button
                     key={tab.value}
