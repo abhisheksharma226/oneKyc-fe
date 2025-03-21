@@ -70,7 +70,7 @@ const Profile = () => {
               className="h-24 w-24 rounded-full border" 
             />
             <h2 className="text-xl font-bold">{data?.fullName || "User Not Found"}</h2>
-            <p className="text-sm text-gray-500">{data?.email || "N/A"}</p>
+            <p className="text-sm text-gray-500">{data?.emailAddress || "N/A"}</p>
             <span className="px-3 py-1 border rounded text-sm">{data?.gender || "N/A"}</span>
             <Link to="/support" className="mt-4 w-full text-center bg-gray-200 py-2 rounded hover:bg-gray-300">
               <HelpCircle className="inline-block mr-2" size={16} /> Get Support
@@ -105,7 +105,7 @@ const Profile = () => {
 
               {activeTab === "details" && data && (
                 <div className="space-y-4">
-                  {[{ icon: Mail, label: "Email", value: data?.email },
+                  {[{ icon: Mail, label: "Email", value: data?.emailAddress },
                     { icon: MapPin, label: "State", value: data?.state },
                     { icon: Activity, label: "Country", value: data?.country },
                     { label: "Consent", value: data?.consent ? "Given" : "Not Given", icon: data?.consent ? Check : X, iconColor: data?.consent ? "text-green-500" : "text-red-500" }
