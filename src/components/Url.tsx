@@ -1,1 +1,1 @@
-export const BASE_URL = (userId: string) => `https://vpact5taj5.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;
+export const BASE_URL = (userId: string) => `https://etyfpcv4ia.us-west-2.awsapprunner.com/api/dashboard?userId=${userId}`;

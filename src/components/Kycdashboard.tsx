@@ -126,6 +126,27 @@ const KycDashboard = () => {
     : "0%";
 
 
+
+  const handleLogout = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/logout`, {
+          method: "POST",
+          credentials: "include", // Ensures cookies are sent with the request
+        });
+    
+        if (response.ok) {
+          localStorage.removeItem("authToken"); // Clear local storage
+          window.location.href = "https://one-kyc-fe.vercel.app/home"; // Redirect to login page
+        } else {
+          console.error("Logout failed");
+        }
+      } catch (error) {
+        console.error("Error logging out:", error);
+      }
+    };
+    
+
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
@@ -142,14 +163,17 @@ const KycDashboard = () => {
         </div>
 
         <nav className="space-y-1 px-3 py-4">
-          {[{ id: "dashboard", icon: Home, label: "Dashboard" },
-            { id: "profile", icon: User, label: "Profile" },
-            { id: "support", icon: MessageSquare, label: "Support" },
-            { id: "logout", icon: LogOut, label: "Logout" }]
-            .map(({ id, icon: Icon, label }) => (
+            {[
+              { id: "dashboard", icon: Home, label: "Dashboard" },
+              { id: "profile", icon: User, label: "Profile" },
+              { id: "support", icon: MessageSquare, label: "Support" },
+              { id: "logout", icon: LogOut, label: "Logout" }
+            ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
-                onClick={() => setActiveTab(id)}
+                onClick={() =>
+                  id === "logout" ? handleLogout() : setActiveTab(id)
+                }
                 className={`flex w-full items-center space-x-3 rounded-md px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground ${
                   activeTab === id ? "bg-accent text-accent-foreground" : ""
                 }`}
@@ -158,7 +182,7 @@ const KycDashboard = () => {
                 <span>{label}</span>
               </button>
             ))}
-        </nav>
+            </nav>
       </aside>
 
       {/* Main Content */}
