@@ -128,21 +128,23 @@ const KycDashboard = () => {
 
 
   const handleLogout = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/logout`, {
-          method: "POST",
-          credentials: "include", // Ensures cookies are sent with the request
-        });
+    alert("Logout successful"); // Show alert for successful logout
+    window.location.href = "https://one-kyc-fe.vercel.app/home"; // Redirect to login page
+      // try {
+      //   const response = await fetch(`${BASE_URL}/logout`, {
+      //     method: "POST",
+      //     credentials: "include", // Ensures cookies are sent with the request
+      //   });
     
-        if (response.ok) {
-          localStorage.removeItem("authToken"); // Clear local storage
-          window.location.href = "https://one-kyc-fe.vercel.app/home"; // Redirect to login page
-        } else {
-          console.error("Logout failed");
-        }
-      } catch (error) {
-        console.error("Error logging out:", error);
-      }
+      //   if (response.ok) {
+      //     localStorage.removeItem("authToken"); // Clear local storage
+      //     window.location.href = "https://one-kyc-fe.vercel.app/home"; // Redirect to login page
+      //   } else {
+      //     console.error("Logout failed");
+      //   }
+      // } catch (error) {
+      //   console.error("Error logging out:", error);
+      // }
     };
     
 
